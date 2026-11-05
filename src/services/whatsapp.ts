@@ -106,7 +106,7 @@ export function buildLeadMessage(lead: LeadInput) {
   };
 
   const text = [
-    "🔵🟠 FOC I FRED",
+    "🔵🟠 MULTIMARCAS BARCELONA",
     "TÉCNICO: STEVEN Y YESID",
     "━━━━━━━━━━━━━━━",
     `📋 ORD: ${order}`,

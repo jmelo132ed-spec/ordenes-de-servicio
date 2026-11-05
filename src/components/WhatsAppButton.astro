@@ -3,7 +3,7 @@ import { buildWhatsappUrl } from "../services/whatsapp";
 import { site } from "../data/site";
 
 const href = site.whatsapp
-  ? buildWhatsappUrl(site.whatsapp, "Hola, quiero un servicio de Foc i Fred en Barcelona.")
+  ? buildWhatsappUrl(site.whatsapp, `Hola, quiero un servicio de ${site.name}.`)
   : "/solicitar";
 ---
 
