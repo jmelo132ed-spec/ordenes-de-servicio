@@ -2,7 +2,6 @@
 import "@fontsource-variable/fraunces";
 import "@fontsource-variable/manrope";
 import "../styles/global.css";
-import { getBrands } from "../services/api";
 import { site } from "../data/site";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
@@ -18,7 +17,6 @@ interface Props {
 
 const { title, description, noindex = false, jsonLd } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
-const brands = await getBrands();
 ---
 
 <!doctype html>
@@ -62,14 +60,11 @@ const brands = await getBrands();
   <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <Navbar />
-    <main id="contenido" class="pb-24 lg:pb-0">
+    <main id="contenido" class="pb-40 lg:pb-0">
       <slot />
     </main>
     <Footer />
     <WhatsAppButton />
     <CookieBanner />
-    <datalist id="marcas-focifred">
-      {brands.map((brand) => <option value={brand.name} />)}
-    </datalist>
   </body>
 </html>

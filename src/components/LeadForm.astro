@@ -1,6 +1,7 @@
 ---
 import { services, type ServiceSlug } from "../data/mockData";
 import { site } from "../data/site";
+import { getBrands } from "../services/api";
 import { visitHours } from "../services/whatsapp";
 
 interface Props {
@@ -16,6 +17,8 @@ const {
   id = "pedir",
   heading = "Pide el servicio",
 } = Astro.props;
+
+const brandNames = [...(await getBrands())].map((brand) => brand.name).sort((a, b) => a.localeCompare(b, "es"));
 
 const families = [
   { label: "Calor y agua", ids: ["calderas-de-gas", "calderas-de-gasoil", "termos-electricos", "calentadores-de-gas"] },
@@ -94,7 +97,11 @@ const families = [
       </label>
       <label class="field">
         <span>Marca</span>
-        <input class="control" name="marca" required list="marcas-focifred" placeholder="Ferroli, Vaillant, Balay…" autocomplete="off" />
+        <div class="relative" data-brand-picker>
+          <input class="control" name="marca" required placeholder="Ferroli, Vaillant, Balay…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls={`${id}-marcas`} data-brand-input />
+          <ul id={`${id}-marcas`} class="absolute z-30 mt-1 hidden max-h-52 w-full overflow-auto rounded-2xl border border-line bg-card p-1 shadow-lg" role="listbox" data-brand-list></ul>
+          <script type="application/json" data-brand-source set:html={JSON.stringify(brandNames)}></script>
+        </div>
       </label>
     </div>
 
@@ -152,6 +159,53 @@ const families = [
       const day = String(now.getDate()).padStart(2, "0");
       fechaInput.min = `${now.getFullYear()}-${month}-${day}`;
     }
+
+    const picker = form.querySelector<HTMLElement>("[data-brand-picker]");
+    const brandInput = picker?.querySelector<HTMLInputElement>("[data-brand-input]");
+    const brandList = picker?.querySelector<HTMLElement>("[data-brand-list]");
+    const brandSource = picker?.querySelector<HTMLElement>("[data-brand-source]");
+    const brandNames = JSON.parse(brandSource?.textContent || "[]") as string[];
+
+    function hideBrands() {
+      brandList?.classList.add("hidden");
+      brandInput?.setAttribute("aria-expanded", "false");
+    }
+
+    function showBrands() {
+      if (!brandInput || !brandList) return;
+      const query = brandInput.value.trim().toLocaleLowerCase("es");
+      const matches = brandNames.filter((name) => name.toLocaleLowerCase("es").includes(query)).slice(0, 8);
+      brandList.replaceChildren();
+      if (matches.length === 0) {
+        hideBrands();
+        return;
+      }
+      const spaceBelow = window.innerHeight - brandInput.getBoundingClientRect().bottom;
+      brandList.classList.toggle("bottom-full", spaceBelow < 280);
+      brandList.classList.toggle("mb-1", spaceBelow < 280);
+      brandList.classList.toggle("mt-1", spaceBelow >= 280);
+      matches.forEach((name) => {
+        const item = document.createElement("li");
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "block w-full rounded-xl px-3 py-2 text-left text-sm font-semibold hover:bg-paper";
+        button.setAttribute("role", "option");
+        button.textContent = name;
+        button.addEventListener("pointerdown", (event) => event.preventDefault());
+        button.addEventListener("click", () => {
+          brandInput.value = name;
+          hideBrands();
+        });
+        item.append(button);
+        brandList.append(item);
+      });
+      brandList.classList.remove("hidden");
+      brandInput.setAttribute("aria-expanded", "true");
+    }
+
+    brandInput?.addEventListener("focus", showBrands);
+    brandInput?.addEventListener("input", showBrands);
+    brandInput?.addEventListener("blur", () => window.setTimeout(hideBrands, 120));
 
     const params = new URLSearchParams(window.location.search);
     const requested = params.get("servicio") || form.dataset.defaultService || "";
