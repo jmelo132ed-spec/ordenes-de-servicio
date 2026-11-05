@@ -1,0 +1,70 @@
+---
+import { getBrands } from "../services/api";
+import { brandDisclaimer } from "../data/mockData";
+
+const brands = [...(await getBrands())].sort((a, b) => a.name.localeCompare(b.name, "es"));
+const filters = [
+  { id: "todas", label: "Todas" },
+  { id: "calor", label: "Calor y agua" },
+  { id: "clima", label: "Climatización" },
+  { id: "industrial", label: "Industrial" },
+  { id: "hogar", label: "Línea blanca" },
+];
+---
+
+<div data-brand-directory>
+  <div class="mt-8 flex flex-col gap-3 md:flex-row md:items-center">
+    <label class="field md:min-w-72">
+      <span class="sr-only">Buscar marca</span>
+      <input class="control" type="search" placeholder="Busca tu marca" data-brand-search />
+    </label>
+    <div class="flex flex-wrap gap-2" role="group" aria-label="Filtrar por familia">
+      {filters.map((filter) => (
+        <button class="chip" type="button" data-brand-filter={filter.id} aria-pressed={filter.id === "todas" ? "true" : "false"}>{filter.label}</button>
+      ))}
+    </div>
+  </div>
+  <p class="mt-4 text-sm text-ink-soft"><span data-brand-count>{brands.length}</span> marcas</p>
+  <ul class="mt-4 flex flex-wrap gap-2">
+    {brands.map((brand) => (
+      <li class="rounded-full border border-line bg-card px-3 py-1 text-sm font-semibold" data-brand-item data-name={brand.name.toLocaleLowerCase("es")} data-lines={brand.lines.join(" ")}>{brand.name}</li>
+    ))}
+  </ul>
+  <p class="mt-4 hidden text-sm text-ink-soft" data-brand-empty>No está en el listado. Escríbela igual al pedir el servicio.</p>
+  <p class="mt-6 max-w-3xl text-xs leading-5 text-ink-soft">{brandDisclaimer}</p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-brand-directory]");
+  if (root) {
+    const search = root.querySelector<HTMLInputElement>("[data-brand-search]");
+    const items = [...root.querySelectorAll<HTMLElement>("[data-brand-item]")];
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>("[data-brand-filter]")];
+    const count = root.querySelector<HTMLElement>("[data-brand-count]");
+    const empty = root.querySelector<HTMLElement>("[data-brand-empty]");
+    let line = "todas";
+
+    function render() {
+      const query = (search?.value || "").trim().toLocaleLowerCase("es");
+      let visible = 0;
+      items.forEach((item) => {
+        const lines = (item.dataset.lines || "").split(" ");
+        const name = item.dataset.name || "";
+        const show = (line === "todas" || lines.includes(line)) && name.includes(query);
+        item.hidden = !show;
+        if (show) visible += 1;
+      });
+      if (count) count.textContent = String(visible);
+      empty?.classList.toggle("hidden", visible !== 0);
+    }
+
+    search?.addEventListener("input", render);
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        line = button.dataset.brandFilter || "todas";
+        buttons.forEach((item) => item.setAttribute("aria-pressed", item === button ? "true" : "false"));
+        render();
+      });
+    });
+  }
+</script>

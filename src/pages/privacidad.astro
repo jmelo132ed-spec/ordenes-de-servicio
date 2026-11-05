@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site } from "../data/site";
+---
+
+<Layout title="Privacidad | Foc i Fred" description="Información sobre los datos que envías al pedir un servicio de Foc i Fred por WhatsApp.">
+  <article class="prose-legal mx-auto max-w-3xl px-4 py-14 md:px-6">
+    <h1 class="font-serif text-5xl text-ink">Privacidad</h1>
+    <p class="mt-4">Responsable: {site.legalName}{site.nif ? `, NIF ${site.nif}` : ""}, {site.address}. Contacto: {site.email}.</p>
+    <h2>Qué datos pide el formulario</h2>
+    <p>Nombre, teléfono, dirección, código postal, fecha, franja horaria, equipo, marca y el diagnóstico del fallo.</p>
+    <h2>Para qué</h2>
+    <p>Para responder tu solicitud, coordinar la visita y, si lo pides, preparar un presupuesto de reparación, instalación o venta. La base es tu consentimiento y la gestión de esa petición.</p>
+    <h2>Dónde van</h2>
+    <p>La web no guarda el formulario en una base de datos. Al enviarlo, tu navegador abre WhatsApp con el mensaje. A partir de ese momento la conversación está en WhatsApp, de Meta. No cedemos los datos a otras empresas para su publicidad.</p>
+    <h2>Cuánto tiempo</h2>
+    <p>El tiempo necesario para atender la solicitud y las obligaciones legales que nazcan si hay un trabajo. Puedes pedir acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a {site.email}. También puedes reclamar ante la Agencia Española de Protección de Datos.</p>
+    <h2>Obligación</h2>
+    <p>Sin nombre, teléfono y dirección no podemos devolverte la llamada ni cuadrar la visita. El diagnóstico es necesario para preparar el aviso.</p>
+  </article>
+</Layout>

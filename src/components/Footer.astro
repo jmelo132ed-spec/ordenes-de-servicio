@@ -1,0 +1,46 @@
+---
+import { getServices } from "../services/api";
+import { brandDisclaimer } from "../data/mockData";
+import { site } from "../data/site";
+import Logo from "./Logo.astro";
+
+const services = await getServices();
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-line bg-ink text-white">
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-[1.3fr_1fr_1fr] md:px-6">
+    <div>
+      <Logo tone="light" />
+      <p class="mt-5 max-w-sm text-sm leading-6 text-white/75">
+        Instalación, reparación y venta de calderas, climatización y línea blanca en {site.region}.
+      </p>
+      <a class="mt-5 inline-flex text-sm font-semibold text-white underline decoration-white/30 underline-offset-4" href={`mailto:${site.email}`}>{site.email}</a>
+    </div>
+    <div>
+      <h2 class="font-sans text-xs font-bold uppercase tracking-[0.16em] text-white/50">Servicios</h2>
+      <ul class="mt-4 grid gap-2 text-sm">
+        {services.map((service) => (
+          <li><a class="text-white/80 hover:text-white" href={`/servicios/${service.slug}`}>{service.name}</a></li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h2 class="font-sans text-xs font-bold uppercase tracking-[0.16em] text-white/50">Información</h2>
+      <ul class="mt-4 grid gap-2 text-sm">
+        <li><a class="text-white/80 hover:text-white" href="/solicitar">Pedir servicio</a></li>
+        <li><a class="text-white/80 hover:text-white" href="/marcas">Marcas</a></li>
+        <li><a class="text-white/80 hover:text-white" href="/zonas">Zonas</a></li>
+        <li><a class="text-white/80 hover:text-white" href="/aviso-legal">Aviso legal</a></li>
+        <li><a class="text-white/80 hover:text-white" href="/privacidad">Privacidad</a></li>
+        <li><a class="text-white/80 hover:text-white" href="/cookies">Cookies</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs leading-5 text-white/55 md:px-6">
+      <p>© {year} {site.legalName}. {site.address}.</p>
+      <p>{brandDisclaimer}</p>
+    </div>
+  </div>
+</footer>

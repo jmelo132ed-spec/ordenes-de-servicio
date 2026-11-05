@@ -1,0 +1,34 @@
+---
+import { site } from "../data/site";
+import Logo from "./Logo.astro";
+
+const links = [
+  { href: "/servicios", label: "Servicios" },
+  { href: "/marcas", label: "Marcas" },
+  { href: "/zonas", label: "Zonas" },
+  { href: "/solicitar", label: "Pedir servicio" },
+];
+---
+
+<header class="sticky top-0 z-40 border-b border-line/80 bg-paper/90 backdrop-blur-md">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
+    <a href="/" aria-label="Foc i Fred, inicio" class="shrink-0">
+      <Logo compact />
+    </a>
+    <nav class="hidden items-center gap-7 text-sm font-semibold lg:flex" aria-label="Principal">
+      {links.slice(0, 3).map((link) => (
+        <a class="text-ink-soft hover:text-ink" href={link.href}>{link.label}</a>
+      ))}
+      <a class="rounded-full bg-ink px-4 py-2 text-white hover:bg-ember" href="/solicitar">Pedir servicio</a>
+    </nav>
+    <details class="relative lg:hidden">
+      <summary class="cursor-pointer list-none rounded-full border border-line bg-card px-3 py-2 text-sm font-semibold">Menú</summary>
+      <nav class="absolute right-0 z-50 mt-2 w-56 rounded-2xl border border-line bg-card p-3 shadow-lg" aria-label="Móvil">
+        {links.map((link) => (
+          <a class="block rounded-xl px-3 py-2 font-semibold hover:bg-paper" href={link.href}>{link.label}</a>
+        ))}
+      </nav>
+    </details>
+  </div>
+  <p class="sr-only">{site.city}</p>
+</header>

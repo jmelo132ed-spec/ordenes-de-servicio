@@ -1,0 +1,44 @@
+---
+import { site } from "../data/site";
+---
+
+<div id="aviso-cookies" class="fixed inset-x-3 bottom-24 z-50 hidden max-w-xl rounded-2xl border border-line bg-card p-4 shadow-xl lg:inset-x-auto lg:bottom-5 lg:left-5" role="dialog" aria-labelledby="cookies-titulo">
+  <h2 id="cookies-titulo" class="font-serif text-2xl">Cookies</h2>
+  <p class="mt-1 text-sm text-ink-soft">
+    Guardamos tu elección en este navegador. La medición de Google, si está activa en la web, solo arranca si aceptas.
+    <a class="font-semibold text-frost underline" href="/cookies">Política de cookies</a>.
+  </p>
+  <div class="mt-4 flex gap-2">
+    <button class="rounded-full border border-line px-4 py-2 text-sm font-bold" type="button" data-consent="denied">Rechazar</button>
+    <button class="rounded-full bg-ink px-4 py-2 text-sm font-bold text-white" type="button" data-consent="granted">Aceptar</button>
+  </div>
+</div>
+
+<script define:vars={{ gaId: site.gaId, adsId: site.adsId }}>
+  const storageKey = "focifred-consent";
+  const banner = document.querySelector("#aviso-cookies");
+
+  function apply(value) {
+    const granted = value === "granted";
+    if (typeof window.gtag === "function") {
+      window.gtag("consent", "update", {
+        ad_storage: granted ? "granted" : "denied",
+        ad_user_data: granted ? "granted" : "denied",
+        ad_personalization: granted ? "granted" : "denied",
+        analytics_storage: granted ? "granted" : "denied",
+      });
+    }
+    localStorage.setItem(storageKey, value);
+    banner?.classList.add("hidden");
+  }
+
+  const saved = localStorage.getItem(storageKey);
+  if (!saved) banner?.classList.remove("hidden");
+  else apply(saved);
+
+  banner?.querySelectorAll("[data-consent]").forEach((button) => {
+    button.addEventListener("click", () => apply(button.getAttribute("data-consent")));
+  });
+
+  window.__focAds = { gaId, adsId };
+</script>

@@ -1,0 +1,36 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ServiceView from "../../components/ServiceView.astro";
+import { getService, getServices } from "../../services/api";
+import { site } from "../../data/site";
+import type { Service } from "../../data/mockData";
+
+export async function getStaticPaths() {
+  const list = await getServices();
+  return list.map((service) => ({ params: { slug: service.slug } }));
+}
+
+const service = await getService(Astro.params.slug ?? "");
+if (!service) {
+  throw new Error("Servicio no encontrado");
+}
+
+const current: Service = service;
+const title = `${current.metaTitle} | Foc i Fred`;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: current.metaTitle,
+  description: current.metaDescription,
+  areaServed: { "@type": "City", name: "Barcelona" },
+  provider: {
+    "@type": "HVACBusiness",
+    name: site.name,
+    url: site.url,
+  },
+};
+---
+
+<Layout title={title} description={current.metaDescription} jsonLd={jsonLd}>
+  <ServiceView service={current} />
+</Layout>

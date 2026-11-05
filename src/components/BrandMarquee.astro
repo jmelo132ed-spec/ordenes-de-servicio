@@ -1,0 +1,25 @@
+---
+import { getFeaturedBrands } from "../services/api";
+import { brandDisclaimer } from "../data/mockData";
+
+const brands = getFeaturedBrands();
+const loop = [...brands, ...brands];
+---
+
+<section class="border-y border-line bg-card py-12" aria-labelledby="marcas-titulo">
+  <div class="mx-auto flex max-w-6xl flex-col gap-3 px-4 md:flex-row md:items-end md:justify-between md:px-6">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.16em] text-ember-ink">Marcas de Barcelona</p>
+      <h2 id="marcas-titulo" class="mt-2 font-serif text-4xl">Si está en casa, la conocemos.</h2>
+    </div>
+    <a class="text-sm font-bold text-frost" href="/marcas">Ver el listado completo</a>
+  </div>
+  <div class="marquee mt-8" role="region" aria-label="Marcas que atendemos">
+    <ul class="marquee-track gap-3 px-4">
+      {loop.map((brand) => (
+        <li class="rounded-full border border-line bg-paper px-4 py-2 text-sm font-semibold whitespace-nowrap">{brand}</li>
+      ))}
+    </ul>
+  </div>
+  <p class="mx-auto mt-5 max-w-6xl px-4 text-xs leading-5 text-ink-soft md:px-6">{brandDisclaimer}</p>
+</section>

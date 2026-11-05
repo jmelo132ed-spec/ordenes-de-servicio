@@ -1,0 +1,213 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope Variable", sans-serif;
+  --font-serif: "Fraunces Variable", Georgia, serif;
+  --color-ink: #122033;
+  --color-ink-soft: #3d5166;
+  --color-paper: #f4f0e8;
+  --color-sand: #e5ddd0;
+  --color-card: #fffdf9;
+  --color-ember: #c24c22;
+  --color-ember-ink: #8d3414;
+  --color-frost: #14636c;
+  --color-frost-deep: #0c3e44;
+  --color-line: #d8d0c3;
+  --color-whatsapp: #0e7a63;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+::selection {
+  background: var(--color-frost);
+  color: white;
+}
+
+h1,
+h2,
+h3,
+.font-serif {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 80;
+  background: var(--color-ink);
+  color: white;
+  padding: 0.6rem 0.9rem;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field span,
+.choice-legend {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+
+.control {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  background: white;
+  color: var(--color-ink);
+  border-radius: 0.8rem;
+  padding: 0.75rem 0.85rem;
+  font: inherit;
+}
+
+.control:focus {
+  outline: 2px solid var(--color-frost);
+  outline-offset: 1px;
+  border-color: var(--color-frost);
+}
+
+.choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+
+.choice-wide {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (min-width: 640px) {
+  .choice-wide {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.choice label {
+  position: relative;
+}
+
+.choice input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choice label span {
+  display: block;
+  text-align: center;
+  border: 1px solid var(--color-line);
+  background: white;
+  border-radius: 999px;
+  padding: 0.55rem 0.4rem;
+  font-size: 0.92rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-ink);
+}
+
+.choice input:focus-visible + span,
+.choice label span:hover {
+  border-color: var(--color-ink);
+}
+
+.choice input:checked + span {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: white;
+}
+
+.chip {
+  border: 1px solid var(--color-line);
+  background: white;
+  color: var(--color-ink);
+  border-radius: 999px;
+  padding: 0.4rem 0.75rem;
+  font: inherit;
+  font-size: 0.92rem;
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--color-frost);
+  border-color: var(--color-frost);
+  color: white;
+}
+
+.error-text {
+  color: var(--color-ember-ink);
+  font-size: 0.92rem;
+}
+
+.marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 48s linear infinite;
+}
+
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+}
+
+.prose-legal h1,
+.prose-legal h2 {
+  font-family: var(--font-serif);
+}
+
+.prose-legal p,
+.prose-legal li {
+  color: var(--color-ink-soft);
+}
+
+.prose-legal h2 {
+  margin-top: 1.8rem;
+  margin-bottom: 0.4rem;
+  font-size: 1.45rem;
+  color: var(--color-ink);
+}

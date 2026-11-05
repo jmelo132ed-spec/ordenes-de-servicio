@@ -1,0 +1,55 @@
+---
+import LeadForm from "./LeadForm.astro";
+import { brandDisclaimer, brandsFor, services, type Service } from "../data/mockData";
+
+interface Props {
+  service: Service;
+}
+const { service } = Astro.props;
+const related = services.filter((item) => item.family === service.family && item.slug !== service.slug).slice(0, 3);
+const brandList = brandsFor(service.slug);
+---
+
+<article class="mx-auto max-w-6xl px-4 pt-10 pb-16 md:px-6">
+  <p class="text-sm text-ink-soft"><a class="font-semibold text-frost" href="/servicios">Servicios</a> / {service.name}</p>
+  <div class="mt-4 lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-12">
+    <header class="lg:col-start-1">
+      <h1 class="font-serif text-5xl leading-[1.05] md:text-6xl">{service.name} en Barcelona</h1>
+      <p class="mt-4 max-w-xl text-lg text-ink-soft">{service.intro}</p>
+    </header>
+    <aside class="mt-8 lg:col-start-2 lg:row-span-4 lg:row-start-1 lg:mt-0 lg:sticky lg:top-24">
+      <LeadForm defaultService={service.slug} symptoms={service.symptoms} heading="Pedir este servicio" />
+    </aside>
+    <section class="mt-10 lg:col-start-1" aria-labelledby="incluye">
+      <h2 id="incluye" class="font-serif text-3xl">Qué incluye</h2>
+      <ul class="mt-4 grid gap-3">
+        {service.includes.map((item) => (
+          <li class="rounded-2xl border border-line bg-card px-4 py-3">{item}</li>
+        ))}
+      </ul>
+    </section>
+    <section class="mt-10 lg:col-start-1" aria-labelledby="marcas-servicio">
+      <h2 id="marcas-servicio" class="font-serif text-3xl">Marcas de este servicio</h2>
+      <p class="mt-2 text-sm text-ink-soft">Si no ves la tuya, escríbela en el formulario.</p>
+      <ul class="mt-4 flex flex-wrap gap-2">
+        {brandList.map((brand) => (
+          <li class="rounded-full border border-line bg-card px-3 py-1 text-sm font-semibold">{brand.name}</li>
+        ))}
+      </ul>
+      <p class="mt-4 text-xs leading-5 text-ink-soft">{brandDisclaimer}</p>
+    </section>
+    <section class="mt-10 lg:col-start-1" aria-labelledby="relacionados">
+      <h2 id="relacionados" class="font-serif text-3xl">También en esta familia</h2>
+      <ul class="mt-4 grid gap-3 sm:grid-cols-3">
+        {related.map((item) => (
+          <li>
+            <a class="block h-full rounded-2xl border border-line bg-card p-4 hover:border-ink" href={`/servicios/${item.slug}`}>
+              <span class="font-serif text-xl">{item.name}</span>
+              <span class="mt-1 block text-sm text-ink-soft">{item.short}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</article>

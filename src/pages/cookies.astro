@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site } from "../data/site";
+---
+
+<Layout title="Cookies | Foc i Fred" description="Cookies y medición de anuncios de Foc i Fred. La medición de Google permanece apagada hasta que aceptas.">
+  <article class="prose-legal mx-auto max-w-3xl px-4 py-14 md:px-6">
+    <h1 class="font-serif text-5xl text-ink">Cookies</h1>
+    <h2>Qué se guarda siempre</h2>
+    <p>Tu elección de aceptar o rechazar, en el almacenamiento local del navegador, bajo la clave focifred-consent. No identifica tu publicidad. Sirve para no volver a preguntarte en cada visita.</p>
+    <h2>Medición de Google</h2>
+    <p>
+      {site.gaId
+        ? "Esta web tiene configurada la etiqueta de Google. No mide ni personaliza anuncios hasta que aceptas. Si rechazas, la medición queda denegada."
+        : "Ahora mismo no hay una etiqueta de Google activa. Cuando se añada el identificador de Analytics o de Google Ads, la medición seguirá apagada hasta que pulses Aceptar."}
+    </p>
+    <p>Si aceptas, Google puede usar cookies para estadísticas de la visita y para medir los anuncios. Puedes borrar la elección borrando los datos del sitio en tu navegador: el aviso volverá a salir.</p>
+    <h2>Cómo decidir</h2>
+    <p>En el aviso puedes aceptar o rechazar. Las dos opciones dejan usar el formulario y WhatsApp.</p>
+  </article>
+</Layout>

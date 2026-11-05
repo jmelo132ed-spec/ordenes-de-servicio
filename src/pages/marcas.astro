@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageIntro from "../components/PageIntro.astro";
+import BrandDirectory from "../components/BrandDirectory.astro";
+import CtaBand from "../components/CtaBand.astro";
+
+const title = "Marcas de calderas, aire y electrodomésticos | Foc i Fred";
+const description = "Marcas de calderas de gas y gasoil, termos, calentadores, aire acondicionado, climatización industrial y línea blanca que atendemos en Barcelona.";
+---
+
+<Layout title={title} description={description}>
+  <PageIntro
+    eyebrow="Marcas"
+    title="Las que se ven en Barcelona."
+    text="Calderas, climatización y línea blanca. Busca la tuya. Si no sale, escríbela al pedir el servicio: el formulario no te obliga a elegir de una lista cerrada."
+  />
+  <div class="mx-auto max-w-6xl px-4 pb-8 md:px-6">
+    <BrandDirectory />
+  </div>
+  <CtaBand title="¿Ya sabes la marca?" text="Pasa al formulario. En el mensaje irá el nombre del equipo y tu zona." />
+</Layout>

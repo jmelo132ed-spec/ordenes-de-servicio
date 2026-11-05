@@ -1,0 +1,39 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PageIntro from "../../components/PageIntro.astro";
+import { getServices } from "../../services/api";
+
+const services = await getServices();
+const families = [
+  { id: "calor", title: "Calor y agua caliente" },
+  { id: "clima", title: "Frío y climatización" },
+  { id: "hogar", title: "Línea blanca" },
+];
+const title = "Servicios técnicos en Barcelona | Foc i Fred";
+const description = "Reparación, instalación y venta de calderas de gas y gasoil, termos, calentadores, aire acondicionado, aire industrial, aerotermia y línea blanca en Barcelona.";
+---
+
+<Layout title={title} description={description}>
+  <PageIntro
+    eyebrow="Servicios"
+    title="Elige el equipo y pide la visita."
+    text="Cada servicio tiene su página, con las marcas y un formulario que llega a WhatsApp. Sirve para anuncios: una campaña, una URL."
+  />
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-12 md:px-6">
+    {families.map((family) => (
+      <section aria-labelledby={family.id}>
+        <h2 id={family.id} class="font-serif text-3xl">{family.title}</h2>
+        <ul class="mt-4 grid gap-3 md:grid-cols-2">
+          {services.filter((service) => service.family === family.id).map((service) => (
+            <li>
+              <a class="block rounded-2xl border border-line bg-card p-5 hover:border-ink" href={`/servicios/${service.slug}`}>
+                <span class="font-serif text-2xl">{service.name}</span>
+                <span class="mt-1 block text-sm text-ink-soft">{service.summary}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</Layout>

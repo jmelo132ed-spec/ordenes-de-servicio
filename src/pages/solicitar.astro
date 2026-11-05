@@ -1,0 +1,19 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageIntro from "../components/PageIntro.astro";
+import LeadForm from "../components/LeadForm.astro";
+
+const title = "Pedir servicio en Barcelona | Foc i Fred";
+const description = "Formulario para pedir instalación, reparación o venta de calderas, aire acondicionado y línea blanca en Barcelona. Al enviar se abre WhatsApp.";
+---
+
+<Layout title={title} description={description}>
+  <PageIntro
+    eyebrow="Solicitud"
+    title="Pide el servicio en un minuto."
+    text="Deja el equipo, la dirección y la franja. Al enviar se abre WhatsApp con el aviso escrito. Solo tienes que mandarlo."
+  />
+  <div class="mx-auto max-w-xl px-4 py-10 md:px-6">
+    <LeadForm heading="Datos para la visita" />
+  </div>
+</Layout>

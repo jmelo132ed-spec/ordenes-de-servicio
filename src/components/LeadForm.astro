@@ -1,0 +1,241 @@
+---
+import { services, type ServiceSlug } from "../data/mockData";
+import { site } from "../data/site";
+import { visitHours } from "../services/whatsapp";
+
+interface Props {
+  defaultService?: ServiceSlug | "";
+  symptoms?: string[];
+  id?: string;
+  heading?: string;
+}
+
+const {
+  defaultService = "",
+  symptoms = [],
+  id = "pedir",
+  heading = "Pide el servicio",
+} = Astro.props;
+
+const families = [
+  { label: "Calor y agua", ids: ["calderas-de-gas", "calderas-de-gasoil", "termos-electricos", "calentadores-de-gas"] },
+  { label: "Climatización", ids: ["aire-acondicionado", "aire-industrial", "aerotermia"] },
+  { label: "Línea blanca", ids: ["cocinas", "hornos", "lavadoras", "secadoras", "frigorificos", "campanas"] },
+];
+
+---
+
+<form
+  id={id}
+  class="relative rounded-[1.4rem] border border-line bg-card shadow-[0_20px_50px_rgba(18,32,51,0.08)]"
+  method="post"
+  action="/solicitar"
+  data-lead-form
+  data-whatsapp={site.whatsapp}
+  data-default-service={defaultService}
+  novalidate
+>
+  <div class="h-1.5 rounded-t-[1.4rem] bg-gradient-to-r from-ember via-sand to-frost"></div>
+  <div class="grid gap-4 p-5 md:p-6">
+    <div>
+      <h2 class="font-serif text-3xl text-ink">{heading}</h2>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="field">
+        <span>Fecha</span>
+        <input class="control" name="fecha" required type="date" />
+      </label>
+      <label class="field">
+        <span>Hora</span>
+        <select class="control" name="hora" required>
+          <option value="">Elige la franja</option>
+          {visitHours.map((hour) => <option value={hour}>{hour}</option>)}
+        </select>
+      </label>
+    </div>
+
+    <label class="field">
+      <span>Dirección</span>
+      <input class="control" name="direccion" required autocomplete="street-address" placeholder="Calle, número, piso y puerta" />
+    </label>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="field">
+        <span>Código postal</span>
+        <input class="control" name="codigoPostal" required inputmode="numeric" autocomplete="postal-code" placeholder="08025" maxlength="5" />
+      </label>
+      <label class="field">
+        <span>Teléfono</span>
+        <input class="control" name="telefono" required type="tel" inputmode="tel" autocomplete="tel" placeholder="600 000 000" />
+      </label>
+    </div>
+
+    <label class="field">
+      <span>Cliente</span>
+      <input class="control" name="nombre" required autocomplete="name" placeholder="Nombre y apellidos" />
+    </label>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="field">
+        <span>Equipo</span>
+        <select class="control" name="servicio" required>
+          <option value="">Elige el equipo</option>
+          {families.map((family) => (
+            <optgroup label={family.label}>
+              {family.ids.map((slug) => {
+                const service = services.find((item) => item.slug === slug);
+                return service ? <option value={service.slug} selected={service.slug === defaultService}>{service.name}</option> : null;
+              })}
+            </optgroup>
+          ))}
+          <option value="otro">Otro equipo</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Marca</span>
+        <input class="control" name="marca" required list="marcas-focifred" placeholder="Ferroli, Vaillant, Balay…" autocomplete="off" />
+      </label>
+    </div>
+
+    {symptoms.length > 0 && (
+      <fieldset class="grid gap-2">
+        <legend class="choice-legend">Diagnóstico</legend>
+        <div class="flex flex-wrap gap-2">
+          {symptoms.map((symptom) => (
+            <button class="chip" type="button" data-symptom aria-pressed="false">{symptom}</button>
+          ))}
+        </div>
+      </fieldset>
+    )}
+
+    <label class="field">
+      <span>Diagnóstico</span>
+      <textarea class="control min-h-24 resize-y" name="detalle" required maxlength="500" placeholder="No sale agua caliente"></textarea>
+    </label>
+
+    <label class="flex items-start gap-3 text-sm text-ink-soft">
+      <input class="mt-1 h-4 w-4 accent-frost" type="checkbox" name="privacidad" required />
+      <span>Acepto el uso de estos datos para gestionar mi solicitud. <a class="font-semibold text-frost underline" href="/privacidad">Privacidad</a>.</span>
+    </label>
+
+    <div class="absolute -left-[9999px]" aria-hidden="true">
+      <label>Empresa <input name="empresa" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <p class="error-text hidden" data-form-error role="alert"></p>
+    <button class="rounded-full bg-ink px-5 py-3 text-base font-bold text-white hover:bg-ember" type="submit">
+      Solicitar servicio
+    </button>
+    <p class="hidden rounded-2xl bg-paper p-4 text-sm text-ink" data-form-ready></p>
+  </div>
+</form>
+
+<script>
+  import { buildLeadMessage, buildWhatsappUrl, isSpanishMobile } from "../services/whatsapp";
+
+  function showError(form: HTMLFormElement, message: string) {
+    const error = form.querySelector<HTMLElement>("[data-form-error]");
+    if (!error) return;
+    error.textContent = message;
+    error.classList.remove("hidden");
+  }
+
+  function init(form: HTMLFormElement) {
+    if (form.dataset.ready === "true") return;
+    form.dataset.ready = "true";
+
+    const fechaInput = form.querySelector<HTMLInputElement>("[name=fecha]");
+    if (fechaInput) {
+      const now = new Date();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      fechaInput.min = `${now.getFullYear()}-${month}-${day}`;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const requested = params.get("servicio") || form.dataset.defaultService || "";
+    const select = form.querySelector<HTMLSelectElement>("[name=servicio]");
+    if (select && requested && [...select.options].some((option) => option.value === requested)) {
+      select.value = requested;
+    }
+
+    form.querySelectorAll<HTMLButtonElement>("[data-symptom]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const pressed = button.getAttribute("aria-pressed") === "true";
+        button.setAttribute("aria-pressed", pressed ? "false" : "true");
+      });
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const error = form.querySelector<HTMLElement>("[data-form-error]");
+      error?.classList.add("hidden");
+
+      const data = new FormData(form);
+      if (String(data.get("empresa") || "").trim()) return;
+
+      const servicio = String(data.get("servicio") || "");
+      const marca = String(data.get("marca") || "").trim();
+      const fecha = String(data.get("fecha") || "");
+      const hora = String(data.get("hora") || "");
+      const direccion = String(data.get("direccion") || "").trim();
+      const codigoPostal = String(data.get("codigoPostal") || "").trim();
+      const nombre = String(data.get("nombre") || "").trim();
+      const telefono = String(data.get("telefono") || "").trim();
+      const detalle = String(data.get("detalle") || "").trim();
+      const privacidad = form.querySelector<HTMLInputElement>("[name=privacidad]")?.checked;
+      const sintomas = [...form.querySelectorAll<HTMLButtonElement>("[data-symptom][aria-pressed='true']")].map((button) => button.textContent?.trim() || "");
+
+      if (!fecha) return showError(form, "Elige la fecha.");
+      if (!hora) return showError(form, "Elige la hora.");
+      if (direccion.length < 5) return showError(form, "Escribe la dirección completa.");
+      if (!/^\d{5}$/.test(codigoPostal)) return showError(form, "Escribe el código postal, 5 números.");
+      if (nombre.length < 2) return showError(form, "Escribe el nombre del cliente.");
+      if (!isSpanishMobile(telefono)) return showError(form, "Escribe un teléfono de contacto.");
+      if (!servicio) return showError(form, "Elige el equipo.");
+      if (marca.length < 2) return showError(form, "Escribe la marca.");
+      if (!detalle && sintomas.length === 0) return showError(form, "Escribe el diagnóstico.");
+      if (!privacidad) return showError(form, "Acepta el uso de tus datos para poder contactarte.");
+
+      const number = form.dataset.whatsapp || "";
+      const ready = form.querySelector<HTMLElement>("[data-form-ready]");
+      if (!number) {
+        showError(form, "Ahora mismo no podemos abrir WhatsApp. Vuelve a intentarlo en unos minutos.");
+        return;
+      }
+
+      const { text } = buildLeadMessage({
+        servicio,
+        marca,
+        fecha,
+        hora,
+        direccion,
+        codigoPostal,
+        nombre,
+        telefono,
+        detalle,
+        sintomas,
+      });
+      const url = buildWhatsappUrl(number, text);
+      const opened = window.open(url, "_blank", "noopener,noreferrer");
+      if (!ready) return;
+      ready.classList.remove("hidden");
+      ready.replaceChildren();
+      if (opened) {
+        ready.textContent = "Se ha abierto WhatsApp con tu aviso. Pulsa enviar en el chat.";
+        return;
+      }
+      ready.append("El navegador ha bloqueado la ventana. ");
+      const link = document.createElement("a");
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.className = "font-semibold underline";
+      link.textContent = "Abrir WhatsApp";
+      ready.append(link, ".");
+    });
+  }
+
+  document.querySelectorAll<HTMLFormElement>("[data-lead-form]").forEach(init);
+</script>
