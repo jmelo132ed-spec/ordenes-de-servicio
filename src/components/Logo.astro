@@ -1,5 +1,6 @@
 ---
 import LogoMark from "./LogoMark.astro";
+import { site } from "../data/site";
 
 interface Props {
   tone?: "dark" | "light";
@@ -7,12 +8,14 @@ interface Props {
 }
 const { tone = "dark", compact = false } = Astro.props;
 const word = tone === "light" ? "text-white" : "text-ink";
+const [lead, ...rest] = site.name.split(" ");
+const tail = rest.join(" ");
 ---
 
-<span class:list={["inline-flex items-center gap-3", word]}>
-  <LogoMark class={compact ? "h-12 w-12" : "h-14 w-14"} />
+<span class:list={["inline-flex items-center", compact ? "gap-2.5" : "gap-4", word]}>
+  <LogoMark class={compact ? "h-16 w-16" : "h-20 w-20"} />
   <span class="leading-none">
-    <span class:list={["block font-serif tracking-tight", compact ? "text-[1.45rem]" : "text-[2rem]"]}>Multimarcas</span>
-    <span class:list={["block font-bold uppercase", compact ? "mt-1 text-[0.78rem] tracking-[0.16em]" : "mt-1.5 text-[0.9rem] tracking-[0.18em]"]}>Barcelona</span>
+    <span class:list={["block font-serif tracking-tight", compact ? "text-[1.85rem]" : "text-[2.7rem]"]}>{lead}</span>
+    <span class:list={["block font-bold uppercase", compact ? "mt-1 text-[0.68rem] tracking-[0.11em]" : "mt-1.5 text-[0.84rem] tracking-[0.14em]"]}>{tail}</span>
   </span>
 </span>

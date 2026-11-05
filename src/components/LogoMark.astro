@@ -6,20 +6,12 @@ const { class: className = "h-9 w-9" } = Astro.props;
 ---
 
 <svg class={className} viewBox="0 0 64 64" aria-hidden="true">
-  <defs>
-    <clipPath id="multimarcas-badge">
-      <rect width="64" height="64" rx="16"></rect>
-    </clipPath>
-  </defs>
-  <g clip-path="url(#multimarcas-badge)">
-    <rect width="64" height="64" fill="#122033"></rect>
-    <g transform="rotate(-42 32 32)">
-      <path
-        fill="#c24c22"
-        fill-rule="evenodd"
-        d="M18 6h28a5 5 0 0 1 5 5v16a5 5 0 0 1-5 5h-7v24a4 4 0 0 1-4 4h-6a4 4 0 0 1-4-4V32h-7a5 5 0 0 1-5-5V11a5 5 0 0 1 5-5zm9-2h10v18H27V4z"></path>
-    </g>
-    <path d="M21 26.5h22v6.2H34.6V45h-5.2V32.7H21v-6.2z" fill="#f4f0e8"></path>
-  </g>
+  <rect width="64" height="64" rx="16" fill="#122033"></rect>
   <rect x="2.6" y="2.6" width="58.8" height="58.8" rx="14.2" fill="none" stroke="#f4f0e8" stroke-opacity="0.28" stroke-width="1.15"></rect>
+  <rect x="7" y="4" width="15" height="24" rx="6" fill="#e06a32"></rect>
+  <rect x="42" y="4" width="15" height="24" rx="6" fill="#e06a32"></rect>
+  <rect x="7" y="18" width="50" height="8" rx="2" fill="#e06a32"></rect>
+  <rect x="21" y="24" width="22" height="36" rx="7" fill="#e06a32"></rect>
+  <circle cx="32" cy="55.5" r="3.3" fill="#122033"></circle>
+  <path d="M9 29 h46 v11 H37 v13 h-10 V40 H9 z" fill="#f4f0e8"></path>
 </svg>

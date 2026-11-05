@@ -1,3 +1,5 @@
+import { site } from "../data/site";
+
 const ticketEquipment: Record<string, string> = {
   "calderas-de-gas": "CALDERA",
   "calderas-de-gasoil": "CALDERA",
@@ -106,7 +108,7 @@ export function buildLeadMessage(lead: LeadInput) {
   };
 
   const text = [
-    "🔵🟠 MULTIMARCAS BARCELONA",
+    `🔵🟠 ${site.name.toLocaleUpperCase("es-ES")}`,
     "TÉCNICO: STEVEN Y YESID",
     "━━━━━━━━━━━━━━━",
     `📋 ORD: ${order}`,
