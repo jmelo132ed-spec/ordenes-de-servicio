@@ -5,7 +5,6 @@ interface ImportMetaEnv {
   readonly API_URL?: string;
   readonly PUBLIC_SITE_URL?: string;
   readonly PUBLIC_WHATSAPP_NUMBER?: string;
-  readonly PUBLIC_PHONE?: string;
   readonly PUBLIC_EMAIL?: string;
   readonly PUBLIC_LEGAL_NAME?: string;
   readonly PUBLIC_NIF?: string;

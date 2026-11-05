@@ -4,13 +4,13 @@ Web de instalación, reparación y venta de calderas, climatización y línea bl
 
 ## Poner tu WhatsApp
 
-Copia `.env.example` a `.env` y rellena el número con prefijo 34, sin espacios:
+En `.env`, escribe el número con prefijo de país y sin espacios ni signo más. Para el móvil de Colombia es el 57 seguido de los 10 dígitos:
 
 ```
-PUBLIC_WHATSAPP_NUMBER=34612345678
+PUBLIC_WHATSAPP_NUMBER=573206352726
 ```
 
-En Vercel, la misma variable se añade en Settings → Environment Variables. Después hay que volver a desplegar.
+En Vercel: Settings → Environment Variables, el mismo nombre y el mismo valor, en Production. Astro mete el número en el build, así que después hay que volver a desplegar. Si cambias el `.env` en local, reinicia `npm run dev`.
 
 Antes de activar Google Ads, completa también `PUBLIC_LEGAL_NAME`, `PUBLIC_NIF`, `PUBLIC_ADDRESS` y `PUBLIC_EMAIL`. Si vas a medir campañas, añade `PUBLIC_GA_ID` y, si lo usas, `PUBLIC_ADS_ID`. La medición queda apagada hasta que la visita acepta las cookies.
 
