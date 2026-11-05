@@ -5,11 +5,21 @@ interface Props {
 const { class: className = "h-9 w-9" } = Astro.props;
 ---
 
-<svg class={className} viewBox="0 0 32 32" aria-hidden="true">
-  <rect width="32" height="32" rx="7" fill="#122033"></rect>
-  <rect x="8.6" y="6" width="4.6" height="8.4" rx="0.8" fill="#f4f0e8"></rect>
-  <rect x="18.8" y="6" width="4.6" height="8.4" rx="0.8" fill="#f4f0e8"></rect>
-  <rect x="8.6" y="11.6" width="14.8" height="3.6" fill="#f4f0e8"></rect>
-  <rect x="13.9" y="14.6" width="4.2" height="9.2" rx="0.5" fill="#f4f0e8"></rect>
-  <rect x="12.4" y="23.2" width="7.2" height="2.4" rx="0.5" fill="#c24c22"></rect>
+<svg class={className} viewBox="0 0 64 64" aria-hidden="true">
+  <defs>
+    <clipPath id="multimarcas-badge">
+      <rect width="64" height="64" rx="16"></rect>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#multimarcas-badge)">
+    <rect width="64" height="64" fill="#122033"></rect>
+    <g transform="rotate(-42 32 32)">
+      <path
+        fill="#c24c22"
+        fill-rule="evenodd"
+        d="M18 6h28a5 5 0 0 1 5 5v16a5 5 0 0 1-5 5h-7v24a4 4 0 0 1-4 4h-6a4 4 0 0 1-4-4V32h-7a5 5 0 0 1-5-5V11a5 5 0 0 1 5-5zm9-2h10v18H27V4z"></path>
+    </g>
+    <path d="M21 26.5h22v6.2H34.6V45h-5.2V32.7H21v-6.2z" fill="#f4f0e8"></path>
+  </g>
+  <rect x="2.6" y="2.6" width="58.8" height="58.8" rx="14.2" fill="none" stroke="#f4f0e8" stroke-opacity="0.28" stroke-width="1.15"></rect>
 </svg>
